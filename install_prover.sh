@@ -297,6 +297,7 @@ install_docker() {
 }
 
 # Install NVIDIA Container Toolkit
+#: <<'DISABLE_NVIDIA_TOOLKIT'
 install_nvidia_toolkit() {
     if is_package_installed "nvidia-docker2"; then
         info "NVIDIA Container Toolkit already installed"
@@ -337,6 +338,7 @@ EOF
     } >> "$LOG_FILE" 2>&1
     success "NVIDIA Container Toolkit installed"
 }
+#: DISABLE_NVIDIA_TOOLKIT
 
 # Install Rust
 install_rust() {
