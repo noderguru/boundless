@@ -127,23 +127,23 @@ NETWORKS["eth-sepolia"]="Ethereum Sepolia|0x925d8331ddc0a1F0d96E68CF073DFE1d92b6
 # Functions
 info() {
     printf "${CYAN}[INFO]${RESET} %s\n" "$1"
-    echo "[INFO] $(date '+%Y-%m-%d %H:%M:%S') - $1" >> "$LOG_FILE"
+    echo "[INFO] $(date '+%Y-%m-%d %H:%M:%S') - $1" | tee -a "$LOG_FILE"
 }
 
 success() {
     printf "${GREEN}[SUCCESS]${RESET} %s\n" "$1"
-    echo "[SUCCESS] $(date '+%Y-%m-%d %H:%M:%S') - $1" >> "$LOG_FILE"
+    echo "[SUCCESS] $(date '+%Y-%m-%d %H:%M:%S') - $1" | tee -a "$LOG_FILE"
 }
 
 error() {
     printf "${RED}[ERROR]${RESET} %s\n" "$1" >&2
-    echo "[ERROR] $(date '+%Y-%m-%d %H:%M:%S') - $1" >> "$LOG_FILE"
+    echo "[ERROR] $(date '+%Y-%m-%d %H:%M:%S') - $1" | tee -a "$LOG_FILE"
     echo "[ERROR] $(date '+%Y-%m-%d %H:%M:%S') - $1" >> "$ERROR_LOG"
 }
 
 warning() {
     printf "${YELLOW}[WARNING]${RESET} %s\n" "$1"
-    echo "[WARNING] $(date '+%Y-%m-%d %H:%M:%S') - $1" >> "$LOG_FILE"
+    echo "[WARNING] $(date '+%Y-%m-%d %H:%M:%S') - $1" | tee -a "$LOG_FILE"
 }
 
 prompt() {
@@ -214,7 +214,7 @@ update_system() {
             fi
             exit $EXIT_DEPENDENCY_FAILED
         fi
-    } >> "$LOG_FILE" 2>&1
+    } 2>&1 | tee -a "$LOG_FILE"
     success "System packages updated"
 }
 
@@ -239,7 +239,7 @@ install_basic_deps() {
             fi
             exit $EXIT_DEPENDENCY_FAILED
         fi
-    } >> "$LOG_FILE" 2>&1
+    } 2>&1 | tee -a "$LOG_FILE"
     success "Basic dependencies installed"
 }
 
@@ -254,7 +254,7 @@ install_gpu_drivers() {
             error "Failed to install GPU drivers"
             exit $EXIT_GPU_ERROR
         fi
-    } >> "$LOG_FILE" 2>&1
+    } 2>&1 | tee -a "$LOG_FILE"
     success "GPU drivers installed"
 }
 
@@ -292,12 +292,11 @@ install_docker() {
         systemctl enable docker
         systemctl start docker
         usermod -aG docker $(logname 2>/dev/null || echo "$USER")
-    } >> "$LOG_FILE" 2>&1
+    } 2>&1 | tee -a "$LOG_FILE"
     success "Docker installed"
 }
 
 # Install NVIDIA Container Toolkit
-#: <<'DISABLE_NVIDIA_TOOLKIT'
 install_nvidia_toolkit() {
     if is_package_installed "nvidia-docker2"; then
         info "NVIDIA Container Toolkit already installed"
@@ -335,10 +334,9 @@ install_nvidia_toolkit() {
 }
 EOF
         systemctl restart docker
-    } >> "$LOG_FILE" 2>&1
+    } 2>&1 | tee -a "$LOG_FILE"
     success "NVIDIA Container Toolkit installed"
 }
-#: DISABLE_NVIDIA_TOOLKIT
 
 # Install Rust
 install_rust() {
@@ -351,7 +349,7 @@ install_rust() {
         curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
         source "$HOME/.cargo/env"
         rustup update
-    } >> "$LOG_FILE" 2>&1
+    } 2>&1 | tee -a "$LOG_FILE"
     success "Rust installed"
 }
 
@@ -364,7 +362,7 @@ install_just() {
     info "Installing Just command runner..."
     {
         curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | bash -s -- --to /usr/local/bin
-    } >> "$LOG_FILE" 2>&1
+    } 2>&1 | tee -a "$LOG_FILE"
     success "Just installed"
 }
 
@@ -401,7 +399,7 @@ install_cuda() {
             fi
             exit $EXIT_DEPENDENCY_FAILED
         fi
-    } >> "$LOG_FILE" 2>&1
+    } 2>&1 | tee -a "$LOG_FILE"
     success "CUDA Toolkit installed"
 }
 
@@ -421,11 +419,11 @@ install_rust_deps() {
             exit $EXIT_DPKG_ERROR
         fi
         info "Installing cargo..."
-        apt update >> "$LOG_FILE" 2>&1 || {
+        apt update 2>&1 | tee -a "$LOG_FILE" || {
             error "Failed to update package list for cargo"
             exit $EXIT_DEPENDENCY_FAILED
         }
-        apt install -y cargo >> "$LOG_FILE" 2>&1 || {
+        apt install -y cargo 2>&1 | tee -a "$LOG_FILE" || {
             error "Failed to install cargo"
             if apt install -y cargo 2>&1 | grep -q "dpkg was interrupted"; then
                 exit $EXIT_DPKG_ERROR
@@ -436,19 +434,19 @@ install_rust_deps() {
 
     # Always install rzup and the RISC Zero Rust toolchain
     info "Installing rzup..."
-    curl -L https://risczero.com/install | bash >> "$LOG_FILE" 2>&1 || {
+    curl -L https://risczero.com/install | bash 2>&1 | tee -a "$LOG_FILE" || {
         error "Failed to install rzup"
         exit $EXIT_DEPENDENCY_FAILED
     }
     # Update PATH in the current shell
     export PATH="$PATH:/root/.risc0/bin"
     # Source bashrc to ensure environment is updated
-    PS1='' source ~/.bashrc >> "$LOG_FILE" 2>&1 || {
+    PS1='' source ~/.bashrc 2>&1 | tee -a "$LOG_FILE" || {
         error "Failed to source ~/.bashrc after rzup install"
         exit $EXIT_DEPENDENCY_FAILED
     }
     # Install RISC Zero Rust toolchain
-    rzup install rust >> "$LOG_FILE" 2>&1 || {
+    rzup install rust 2>&1 | tee -a "$LOG_FILE" || {
         error "Failed to install RISC Zero Rust toolchain"
         exit $EXIT_DEPENDENCY_FAILED
     }
@@ -464,11 +462,11 @@ install_rust_deps() {
     # Install cargo-risczero
     if ! command_exists cargo-risczero; then
         info "Installing cargo-risczero..."
-        cargo install cargo-risczero >> "$LOG_FILE" 2>&1 || {
+        cargo install cargo-risczero 2>&1 | tee -a "$LOG_FILE" || {
             error "Failed to install cargo-risczero"
             exit $EXIT_DEPENDENCY_FAILED
         }
-        rzup install cargo-risczero >> "$LOG_FILE" 2>&1 || {
+        rzup install cargo-risczero 2>&1 | tee -a "$LOG_FILE" || {
             error "Failed to install cargo-risczero via rzup"
             exit $EXIT_DEPENDENCY_FAILED
         }
@@ -476,26 +474,26 @@ install_rust_deps() {
 
     # Install bento-client with the RISC Zero toolchain
     info "Installing bento-client..."
-    RUSTUP_TOOLCHAIN=$TOOLCHAIN cargo install --git https://github.com/risc0/risc0 bento-client --bin bento_cli >> "$LOG_FILE" 2>&1 || {
+    RUSTUP_TOOLCHAIN=$TOOLCHAIN cargo install --git https://github.com/risc0/risc0 bento-client --bin bento_cli 2>&1 | tee -a "$LOG_FILE" || {
         error "Failed to install bento-client"
         exit $EXIT_DEPENDENCY_FAILED
     }
     # Persist PATH for cargo binaries
     echo 'export PATH="$HOME/.cargo/bin:$PATH"' >> ~/.bashrc
-    PS1='' source ~/.bashrc >> "$LOG_FILE" 2>&1 || {
+    PS1='' source ~/.bashrc 2>&1 | tee -a "$LOG_FILE" || {
         error "Failed to source ~/.bashrc after installing bento-client"
         exit $EXIT_DEPENDENCY_FAILED
     }
 
     # Install boundless-cli
     info "Installing boundless-cli..."
-    cargo install --locked boundless-cli >> "$LOG_FILE" 2>&1 || {
+    cargo install --locked boundless-cli 2>&1 | tee -a "$LOG_FILE" || {
         error "Failed to install boundless-cli"
         exit $EXIT_DEPENDENCY_FAILED
     }
     # Update PATH for boundless-cli
     export PATH="$PATH:/root/.cargo/bin"
-    PS1='' source ~/.bashrc >> "$LOG_FILE" 2>&1 || {
+    PS1='' source ~/.bashrc 2>&1 | tee -a "$LOG_FILE" || {
         error "Failed to source ~/.bashrc after installing boundless-cli"
         exit $EXIT_DEPENDENCY_FAILED
     }
@@ -540,7 +538,7 @@ clone_repository() {
             error "Failed to initialize submodules"
             exit $EXIT_DEPENDENCY_FAILED
         fi
-    } >> "$LOG_FILE" 2>&1
+    } 2>&1 | tee -a "$LOG_FILE"
     success "Repository cloned and initialized"
 }
 
@@ -1703,7 +1701,7 @@ main() {
     mkdir -p "$(dirname "$LOG_FILE")"
     touch "$LOG_FILE"
     touch "$ERROR_LOG"
-    echo "[START] Installation started at $(date)" >> "$LOG_FILE"
+    echo "[START] Installation started at $(date)" | tee -a "$LOG_FILE"
     echo "[START] Installation started at $(date)" >> "$ERROR_LOG"
     info "Logs will be saved to:"
     info "  - Full log: cat $LOG_FILE"
@@ -1742,7 +1740,7 @@ main() {
     configure_broker
     create_management_script
     echo -e "\n${GREEN}${BOLD}Installation Complete!${RESET}"
-    echo "[SUCCESS] Installation completed successfully at $(date)" >> "$LOG_FILE"
+    echo "[SUCCESS] Installation completed successfully at $(date)" | tee -a "$LOG_FILE"
     echo -e "\n${BOLD}Next Steps:${RESET}"
     echo "1. You can now manage your Prover node via a script"
     echo "2. Navigate to: cd $INSTALL_DIR"
