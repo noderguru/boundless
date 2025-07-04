@@ -118,6 +118,7 @@ https://superbridge.app/base-sepolia  бриджим eth sepolia > eth base-sepo
 
 ### Арендуем сервак с привиллегированным доступом, так как надо запускать образ Docker DIND (Docker in Docker)
 
+https://cloud.vast.ai/?ref_id=62897&creator_id=62897&name=Ubuntu%2022.04%20VM
 
 
 
