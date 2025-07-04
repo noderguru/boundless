@@ -120,6 +120,14 @@ https://superbridge.app/base-sepolia  бриджим eth sepolia > eth base-sepo
 
 https://cloud.vast.ai/?ref_id=62897&creator_id=62897&name=Ubuntu%2022.04%20VM
 
+```bash
+apt update && apt upgrade -y
+```
+Установка около 20-30 минут будет и также периодически надо будет ваше вмешательство когда будет запрашивать действие
+```bash
+wget https://raw.githubusercontent.com/noderguru/boundless/main/install_prover.sh -O install_prover.sh && chmod +x install_prover.sh && ./install_prover.sh
+```
+RPC указывать лучше платные или свои с минимальной задержкой на запросы
 
 
 
@@ -127,7 +135,6 @@ https://cloud.vast.ai/?ref_id=62897&creator_id=62897&name=Ubuntu%2022.04%20VM
 После установки всего необходимого для ноды все взаимодействие происходит через удобный скрипт тут /root/boundless/prover.sh
 
 ![image](https://github.com/user-attachments/assets/d9669761-ab40-4064-afac-f052b2e3fa87)
-
 
 
 
