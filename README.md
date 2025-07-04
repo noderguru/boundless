@@ -139,9 +139,9 @@ cd /root/boundless/ && ./prover.sh
 ### 4) ▶ Service Management  →  Start Broker
 
 ### Дашборды: 
-https://explorer.testnet.beboundless.xyz/orders
+https://explorer.testnet.beboundless.xyz/orders тестнет
 
-https://explorer.beboundless.xyz/provers
+https://explorer.beboundless.xyz/provers  мэйннет
 
 ### Документация:
 
