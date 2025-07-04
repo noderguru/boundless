@@ -138,6 +138,15 @@ cd /root/boundless/ && ./prover.sh
 ### 3) ▶ Configuration  →  Edit Broker Config (все корректировки которые вносите применяются "на лету") нет необходимости рестартить контейнеры
 ### 4) ▶ Service Management  →  Start Broker
 
+### Дашборды: 
+https://explorer.testnet.beboundless.xyz/orders
+
+https://explorer.beboundless.xyz/provers
+
+### Документация:
+
+https://docs.beboundless.xyz/provers/quick-start
+
 ![image](https://github.com/user-attachments/assets/d9669761-ab40-4064-afac-f052b2e3fa87)
 
 
