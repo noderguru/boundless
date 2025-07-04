@@ -133,6 +133,12 @@ RPC указывать лучше платные или свои с минима
 
 
 После установки всего необходимого для ноды все взаимодействие происходит через удобный скрипт тут /root/boundless/prover.sh
+### 1) ▶ Service Management  → Start Bento (testing only)
+### 2) ▶ Stake Management   →  Deposit Stake  (стейкаем забридженные USDC)  →   Check Stake Balance
+### 3) ▶ Configuration  →  Edit Broker Config (все корректировки которые вносите применяются "на лету") нет необходимости рестартить контейнеры
+### 4) ▶ Service Management  →  Start Broker
+
+
 
 ![image](https://github.com/user-attachments/assets/d9669761-ab40-4064-afac-f052b2e3fa87)
 
