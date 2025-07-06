@@ -133,6 +133,10 @@ RPC указывать лучше платные или свои с минима
 ```bash
 cd /root/boundless/ && ./prover.sh
 ```
+мониторинг загрузки карты в реальном режиме времени
+```bash
+watch -n 1 nvidia-smi
+```
 ### 1) ▶ Service Management  → Start Bento (testing only)
 ### 2) ▶ Stake Management   →  Deposit Stake  (стейкаем забридженные USDC)  →   Check Stake Balance
 ### 3) ▶ Configuration  →  Edit Broker Config (все корректировки которые вносите применяются "на лету") нет необходимости рестартить контейнеры
