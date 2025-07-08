@@ -516,8 +516,7 @@ clone_repository() {
                 rm -rf "$INSTALL_DIR"
             else
                 cd "$INSTALL_DIR"
-                # Try pulling latest changes from current branch
-                if ! git pull origin "$(git symbolic-ref --short HEAD)" 2>&1 >> "$LOG_FILE"; then
+                if ! git pull origin release-0.11 2>&1 >> "$LOG_FILE"; then
                     error "Failed to update repository"
                     exit $EXIT_DEPENDENCY_FAILED
                 fi
@@ -525,28 +524,22 @@ clone_repository() {
             fi
         fi
     fi
-
     {
         if ! git clone https://github.com/boundless-xyz/boundless "$INSTALL_DIR" 2>&1; then
             error "Failed to clone repository"
             exit $EXIT_DEPENDENCY_FAILED
         fi
         cd "$INSTALL_DIR"
-
-        LATEST_TAG=$(git ls-remote --tags origin | grep 'refs/tags/release-' | awk -F'/' '{print $3}' | sort -V | tail -n1)
-        info "Checking out latest release tag: $LATEST_TAG"
-        if ! git checkout "$LATEST_TAG" 2>&1; then
-            error "Failed to checkout $LATEST_TAG"
+        if ! git checkout release-0.11 2>&1; then
+            error "Failed to checkout release-0.11"
             exit $EXIT_DEPENDENCY_FAILED
         fi
-
         if ! git submodule update --init --recursive 2>&1; then
             error "Failed to initialize submodules"
             exit $EXIT_DEPENDENCY_FAILED
         fi
     } 2>&1 | tee -a "$LOG_FILE"
-
-    success "Repository cloned and initialized (version: $LATEST_TAG)"
+    success "Repository cloned and initialized"
 }
 
 # Detect GPU configuration
