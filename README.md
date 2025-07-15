@@ -116,8 +116,7 @@ https://superbridge.app/base-sepolia  бриджим eth sepolia > eth base-sepo
 
 затем USDC ETH-sepolia > USDC Base-sepolia (как пройдёт транза надо заклэймить наши USDC)
 
-### Арендуем сервак с привиллегированным доступом, так как надо запускать образ Docker DIND (Docker in Docker)
-
+### Арендуем сервак c root доступом
 https://cloud.vast.ai/?ref_id=62897&creator_id=62897&name=Ubuntu%2022.04%20VM
 
 ```bash
