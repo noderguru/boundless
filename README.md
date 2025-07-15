@@ -127,7 +127,7 @@ apt update && apt upgrade -y
 ```bash
 wget https://raw.githubusercontent.com/noderguru/boundless/main/install_prover.sh -O install_prover.sh && chmod +x install_prover.sh && ./install_prover.sh
 ```
-RPC указывать лучше платные или свои с минимальной задержкой на запросы
+RPC указывать лучше платные или свои с минимальной задержкой на запросы с поддержкой метода ```eth_newBlockFilter```
 
 После установки всего необходимого для ноды все взаимодействие происходит через удобный скрипт
 ```bash
