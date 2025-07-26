@@ -474,7 +474,7 @@ install_rust_deps() {
 
     # Install bento-client with the RISC Zero toolchain
     info "Installing bento-client..."
-    RUSTUP_TOOLCHAIN=$TOOLCHAIN cargo install --git https://github.com/risc0/risc0 bento-client --bin bento_cli 2>&1 | tee -a "$LOG_FILE" || {
+    RUSTUP_TOOLCHAIN=$TOOLCHAIN cargo install --locked --git https://github.com/risc0/risc0 bento-client --branch release-2.3 --bin bento_cli 2>&1 | tee -a "$LOG_FILE" || {
         error "Failed to install bento-client"
         exit $EXIT_DEPENDENCY_FAILED
     }
